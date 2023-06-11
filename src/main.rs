@@ -53,9 +53,14 @@ fn run_display() -> Result<(), Box<dyn Error>> {
 
     display.init().unwrap();
 
-    dashboard.draw(&mut display).unwrap();
+    // ctrlc::set_handler(move || break 'running Ok(()))
+    //     .expect("Error setting ctrlc handler.");
 
-    display.flush().unwrap();
+    'running: loop {
+        dashboard.draw(&mut display).unwrap();
+        display.flush().unwrap();
+        thread::sleep(Duration::from_millis(1000));
+    }
 
     Ok(())
 }
