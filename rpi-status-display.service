@@ -1,0 +1,8 @@
+[Unit]
+Description=rpi-status-display
+
+[Service]
+ExecStart=/usr/bin/rpi_display
+
+[Install]
+WantedBy=multi-user.target
