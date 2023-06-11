@@ -19,9 +19,7 @@ pub mod dashboard;
 #[cfg(feature = "embedded-graphics-simulator")]
 fn run_display() -> Result<(), Box<dyn Error>> {
     let mut display = SimulatorDisplay::<BinaryColor>::new(Size::new(128, 64));
-    let dashboard = dashboard::Dashboard::new();
-
-    dashboard.draw(&mut display)?;
+    let mut dashboard = dashboard::Dashboard::new();
 
     let output_settings = OutputSettingsBuilder::new()
         .theme(BinaryColorTheme::OledWhite)
@@ -30,11 +28,15 @@ fn run_display() -> Result<(), Box<dyn Error>> {
     let mut win = Window::new("Hello World", &output_settings);
 
     'running: loop {
+        display.clear(BinaryColor::Off)?;
+        dashboard.draw(&mut display)?;
         win.update(&display);
+
         if win.events().any(|e| e == SimulatorEvent::Quit) {
             break 'running Ok(());
         }
-        thread::sleep(Duration::from_millis(50));
+
+        thread::sleep(Duration::from_millis(1000));
     }
 }
 
@@ -47,9 +49,11 @@ fn run_display() -> Result<(), Box<dyn Error>> {
     let mut display = Ssd1306::new(interface, DisplaySize128x64, DisplayRotation::Rotate0)
         .into_buffered_graphics_mode();
 
+    let mut dashboard = dashboard::Dashboard::new();
+
     display.init().unwrap();
 
-    draw(&mut display);
+    dashboard.draw(&mut display).unwrap();
 
     display.flush().unwrap();
 
