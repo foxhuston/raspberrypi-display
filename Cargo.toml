@@ -1,7 +1,10 @@
 [package]
 name = "rpi_display"
 version = "0.1.0"
+authors = ["Fox Huston"]
 edition = "2021"
+license = "GPL3"
+description = "Drives an SSD1306 OLED connected to a raspberry pi"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

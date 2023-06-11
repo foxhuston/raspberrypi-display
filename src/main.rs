@@ -57,6 +57,7 @@ fn run_display() -> Result<(), Box<dyn Error>> {
     //     .expect("Error setting ctrlc handler.");
 
     'running: loop {
+        display.clear(BinaryColor::Off);
         dashboard.draw(&mut display).unwrap();
         display.flush().unwrap();
         thread::sleep(Duration::from_millis(1000));
