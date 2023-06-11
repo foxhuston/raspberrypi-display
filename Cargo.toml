@@ -12,5 +12,7 @@ simulator = ["embedded-graphics-simulator"]
 [dependencies]
 embedded-graphics = "0.8.0"
 embedded-graphics-simulator = { version = "0.5.0", optional = true }
+hostname = "0.3.1"
+local-ip-address = "0.5.3"
 rppal = { version = "0.14.1", features = ["hal"] }
 ssd1306 = "0.8.0"
