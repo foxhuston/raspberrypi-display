@@ -1,4 +1,4 @@
-use std::{error::Error, fmt::Debug};
+use std::{error::Error, fmt::Debug, thread, time::Duration};
 
 use rppal::i2c::I2c;
 // use rppal::system::DeviceInfo;
@@ -13,7 +13,7 @@ use embedded_graphics::{
 };
 
 #[cfg(feature = "embedded-graphics-simulator")]
-use embedded_graphics_simulator::{BinaryColorTheme, SimulatorDisplay, Window, OutputSettingsBuilder};
+use embedded_graphics_simulator::{BinaryColorTheme, SimulatorDisplay, Window, OutputSettingsBuilder, SimulatorEvent};
 
 use ssd1306::{prelude::*, I2CDisplayInterface, Ssd1306};
 
@@ -23,7 +23,8 @@ fn draw<D>(display: &mut D) -> Result<(), D::Error>
     let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
 
     let text_style = TextStyleBuilder::new()
-        .line_height(LineHeight::Percent(100))
+        .baseline(Baseline::Top)
+        // .line_height(LineHeight::Percent(100))
         .build();
 
     Text::with_text_style("Hello world!", Point::zero(), character_style, text_style)
@@ -44,13 +45,18 @@ fn run_display() -> Result<(), Box<dyn Error>> {
     draw(&mut display)?;
 
     let output_settings = OutputSettingsBuilder::new()
-        .theme(BinaryColorTheme::OledBlue)
+        .theme(BinaryColorTheme::OledWhite)
         .build();
 
-    Window::new("Hello World", &output_settings).show_static(&display);
+    let mut win = Window::new("Hello World", &output_settings);
 
-
-    Ok(())
+    'running: loop {
+        win.update(&display);
+        if win.events().any(|e| e == SimulatorEvent::Quit) {
+            break 'running Ok(());
+        }
+        thread::sleep(Duration::from_millis(50));
+    }
 }
 
 #[cfg(not(feature = "embedded-graphics-simulator"))]
