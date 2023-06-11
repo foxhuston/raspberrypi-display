@@ -46,7 +46,7 @@ fn run_display() -> Result<(), Box<dyn Error>> {
 
     let interface = I2CDisplayInterface::new(i2c);
 
-    let mut display = Ssd1306::new(interface, DisplaySize128x64, DisplayRotation::Rotate0)
+    let mut display = Ssd1306::new(interface, DisplaySize128x32, DisplayRotation::Rotate0)
         .into_buffered_graphics_mode();
 
     let mut dashboard = dashboard::Dashboard::new();

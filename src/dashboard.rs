@@ -24,14 +24,14 @@ pub struct Dashboard {
 impl Dashboard {
     pub fn new() -> Dashboard {
         Dashboard {
-            sys: System::new(),
+            sys: System::new_all(),
         }
     }
 
     pub fn draw<D>(&mut self, display: &mut D) -> Result<(), D::Error>
         where D: DrawTarget<Color = BinaryColor>, <D as DrawTarget>::Error : Debug
     {
-        self.sys.refresh_cpu();
+        self.sys.refresh_all();
 
         let cs_large = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
         let cs_small = MonoTextStyle::new(&FONT_5X7, BinaryColor::On);
