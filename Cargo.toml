@@ -20,3 +20,7 @@ rppal = { version = "0.14.1", features = ["hal"] }
 ssd1306 = "0.8.0"
 string-builder = "0.2.0"
 sysinfo = "0.29.2"
+
+
+[package.metadata.deb]
+assets = [["rpi-status-display.service", "/etc/systemd/system/"]]
