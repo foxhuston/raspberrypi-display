@@ -8,6 +8,10 @@ description = "Drives an SSD1306 OLED connected to a raspberry pi"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[[bin]]
+name = "rpi-status-display"
+path = "src/main.rs"
+
 [features]
 default=[]
 simulator = ["embedded-graphics-simulator"]
@@ -21,6 +25,8 @@ ssd1306 = "0.8.0"
 string-builder = "0.2.0"
 sysinfo = "0.29.2"
 
-
 [package.metadata.deb]
-assets = [["rpi-status-display.service", "/etc/systemd/system/"]]
+assets = [
+  ["target/release/rpi-status-display", "/usr/bin/", "555"],
+  ["rpi-status-display.service", "/etc/systemd/system/", "644"],
+]
