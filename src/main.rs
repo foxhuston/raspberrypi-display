@@ -18,7 +18,7 @@ pub mod dashboard;
 
 #[cfg(feature = "embedded-graphics-simulator")]
 fn run_display() -> Result<(), Box<dyn Error>> {
-    let mut display = SimulatorDisplay::<BinaryColor>::new(Size::new(128, 64));
+    let mut display = SimulatorDisplay::<BinaryColor>::new(Size::new(128, 32));
     let mut dashboard = dashboard::Dashboard::new();
 
     let output_settings = OutputSettingsBuilder::new()

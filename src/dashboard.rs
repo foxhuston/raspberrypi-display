@@ -5,7 +5,7 @@ use local_ip_address::local_ip;
 use sysinfo::{NetworkExt, NetworksExt, ProcessExt, System, SystemExt, CpuExt};
 
 use embedded_graphics::{
-    mono_font::{MonoTextStyle, ascii::FONT_6X10, ascii::FONT_7X13},
+    mono_font::{MonoTextStyle, ascii::FONT_6X10, ascii::FONT_5X7},
     pixelcolor::BinaryColor,
     primitives::*,
     draw_target::DrawTarget,
@@ -33,8 +33,8 @@ impl Dashboard {
     {
         self.sys.refresh_cpu();
 
-        let cs_large = MonoTextStyle::new(&FONT_7X13, BinaryColor::On);
-        let cs_small = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
+        let cs_large = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
+        let cs_small = MonoTextStyle::new(&FONT_5X7, BinaryColor::On);
 
         let local_ip = local_ip().unwrap();
 
@@ -50,31 +50,37 @@ impl Dashboard {
                            .map(|cpu| cpu.cpu_usage())
                            .sum::<f32>()) / self.sys.cpus().len() as f32 / 100.0;
 
+        let rows = [9, 12, 22, 42];
+
         Text::with_text_style(host_line.as_str(), Point::zero(), cs_large, text_style)
             .draw(display)?;
 
-        Line::new(Point::new(0, 12), Point::new(128, 12))
+        Line::new(Point::new(0, rows[0]), Point::new(128, rows[0]))
             .into_styled(PrimitiveStyle::with_stroke(BinaryColor::On, 1))
             .draw(display)?;
 
-        Text::with_text_style(ip_line.as_str(), Point::new(10, 16), cs_small, text_style)
+        Text::with_text_style(ip_line.as_str(), Point::new(10, rows[1]), cs_small, text_style)
             .draw(display)?;
 
         let left_margin = 4;
+        let label_margin = 20;
+        let bar_size = Size::new(35, 7);
 
-        Text::with_text_style("CPU", Point::new(left_margin, 32), cs_small, text_style)
+        Text::with_text_style("CPU", Point::new(left_margin, rows[2]), cs_small, text_style)
             .draw(display)?;
 
-        self.draw_bar(Point::new(25 + left_margin, 33),
-                      Size::new(90, 7),
+        self.draw_bar(Point::new(label_margin + left_margin, rows[2]),
+                      bar_size,
                       cpu,
                       display)?;
 
-        Text::with_text_style("Mem", Point::new(left_margin, 42), cs_small, text_style)
+        let second_column = 63;
+
+        Text::with_text_style("Mem", Point::new(second_column + left_margin, rows[2]), cs_small, text_style)
             .draw(display)?;
 
-        self.draw_bar(Point::new(25 + left_margin, 43),
-                      Size::new(90, 7),
+        self.draw_bar(Point::new(second_column + label_margin + left_margin, rows[2]),
+                      bar_size,
                       (self.sys.used_memory() as f32) / (self.sys.total_memory() as f32),
                       display)?;
 
